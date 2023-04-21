@@ -8,6 +8,10 @@ on:
 jobs:
   release:
     runs-on: "ubuntu-latest"
+    permissions:
+      contents: "write"
+      packages: "write"
+      pull-requests: "read"
 
     steps:
       - name: "Checkout"
@@ -32,7 +36,3 @@ jobs:
           files: |
             simple_web_status_server
             LICENSE
-        permissions:
-          contents: "write"
-          packages: "write"
-          pull-requests: "read"
