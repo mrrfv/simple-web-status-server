@@ -23,7 +23,6 @@ jobs:
           go build -o simple_web_status_server .
 
       - name: "Create release"
-        id: create_release
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
@@ -33,3 +32,7 @@ jobs:
           files: |
             simple_web_status_server
             LICENSE
+        permissions:
+          contents: "write"
+          packages: "write"
+          pull-requests: "read"
