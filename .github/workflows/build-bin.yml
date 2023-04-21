@@ -1,0 +1,35 @@
+name: "release"
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  release:
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
+      - name: "Setup Go"
+        uses: actions/setup-go@v4
+        with:
+          go-version: 'stable'
+
+      - name: "Build"
+        run: |
+          go build -o simple_web_status_server .
+
+      - name: "Create release"
+        id: create_release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "simple-web-status-server Linux Binary"
+          files: |
+            simple_web_status_server
+            LICENSE
