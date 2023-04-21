@@ -8,6 +8,9 @@ Extremely simple Go-based web server intended for usage by status pages. It retu
 
 ```bash
 docker run -p 2384:2384 mrrfv/simple-web-status-server:latest
+
+# Listen on port 8080:
+docker run -p 8080:2384 mrrfv/simple-web-status-server:latest
 ```
 
 ### Binary
