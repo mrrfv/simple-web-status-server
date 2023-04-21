@@ -7,8 +7,7 @@ Extremely simple Go-based web server intended for usage by status pages. It retu
 ### Docker (recommended)
 
 ```bash
-docker build -t simple-web-status-server .
-docker run -p 2384:2384 simple-web-status-server
+docker run -p 2384:2384 mrrfv/simple-web-status-server:latest
 ```
 
 ### Binary
