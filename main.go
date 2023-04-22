@@ -2,20 +2,44 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 )
 
+func closeTCPConnection(w http.ResponseWriter, r *http.Request) {
+	// Get the HTTP hijacker
+	hj, ok := w.(http.Hijacker)
+	// We can't hijack the connection, so we are closing it normally
+	if !ok {
+		defer r.Body.Close()
+		return
+	}
+	// Get the underlying TCP connection
+	conn, _, err := hj.Hijack()
+	// If we can't get the underlying TCP connection, we are closing it normally
+	if err != nil {
+		defer r.Body.Close()
+		return
+	}
+	// Close the TCP connection
+	// Again, if we can't close the connection, we are closing it normally.
+	err = conn.Close()
+	if err != nil {
+		defer r.Body.Close()
+	}
+}
+
 func main() {
 	// Immediately close any requests other than GET /check_status
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		defer r.Body.Close()
+		defer closeTCPConnection(w, r)
 	})
 
 	// GET /check_status
 	http.HandleFunc("/check_status", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "GET" {
-			defer r.Body.Close()
+			defer closeTCPConnection(w, r)
 			return
 		}
 
@@ -34,6 +58,6 @@ func main() {
 	fmt.Println("Listening on port", port)
 	err := http.ListenAndServe(":"+port, nil)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
